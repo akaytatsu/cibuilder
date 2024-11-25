@@ -21,7 +21,7 @@ RUN apk update && apk add --no-cache \
     npm \
     openssh-client \
     libnotify-dev \
-    openjdk11 \
+    openjdk17 \
     nano
 
 RUN pip install --upgrade pip
@@ -50,7 +50,7 @@ RUN mkdir -p /opt/sonar/ \
     && chmod +x /opt/sonar/bin/sonar-scanner
 
 # Define o JAVA_HOME e atualiza o PATH
-ENV JAVA_HOME="/usr/lib/jvm/java-11-openjdk"
+ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk"
 
 # Adiciona o ambiente virtual ao PATH
 ENV PATH="$JAVA_HOME/bin:/opt/sonar/bin:$PATH"
