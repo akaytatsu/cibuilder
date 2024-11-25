@@ -1,12 +1,13 @@
 # Dockerfile
 
 # Use a imagem base do Alpine Linux com Python 3 instalado
-FROM docker:20.10-cli
+FROM docker:27.3-cli
 
 # Instala as dependências necessárias
 RUN apk update && apk add --no-cache \
     bash \
     curl \
+    wget \
     jq \
     git \
     make \
@@ -44,6 +45,18 @@ RUN apk update && apk add --no-cache \
 # Instala o AWS CLI e o boto3
 RUN npm install cypress
 RUN pip install awscli boto3
+
+# Instala o Sonar Scanner
+RUN mkdir -p /opt/sonar/ \
+    && wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.2.1.4610.zip -O /opt/sonar/sonar-scanner.zip \
+    && unzip /opt/sonar/sonar-scanner.zip -d /opt/sonar \
+    && mv /opt/sonar/sonar-scanner-6.2.1.4610/* /opt/sonar \
+    && rmdir /opt/sonar/sonar-scanner-6.2.1.4610/ \
+    && rm /opt/sonar/sonar-scanner.zip \
+    && chmod +x /opt/sonar/bin/sonar-scanner
+
+# Adiciona o ambiente virtual ao PATH
+ENV PATH="/opt/sonar/bin:$PATH"
 
 # Instala o kubectl
 # RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
